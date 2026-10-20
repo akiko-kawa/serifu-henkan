@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>セリフ異世界転生</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#e8edf3; --ink:#1f2d3d; --sub:#5b6b7e; --line:#c3cfdc; --card:#f6f8fb;
+  --accent:#3b5b8a; --accent-ink:#fff;
+  --serif:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --sans:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--sans); color:var(--ink); background:var(--bg); line-height:1.7;
+  min-height:100vh; padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+main{max-width:560px;margin:0 auto;padding:28px 18px 56px}
+h1{font-family:var(--serif);font-weight:800;font-size:1.9rem;letter-spacing:.06em;margin:0;text-align:center}
+.lead{margin:4px 0 24px;color:var(--sub);font-size:.95rem;text-align:center}
+h2{font-size:1rem;margin:0 0 8px}
+.field{margin-bottom:22px}
+textarea{
+  width:100%;min-height:104px;resize:vertical;font:inherit;font-size:16px;color:var(--ink);
+  background:var(--card);border:2px solid var(--line);border-radius:10px;padding:12px;
+}
+textarea:focus{outline:none;border-color:var(--accent)}
+.count{text-align:right;font-size:.8rem;color:var(--sub);margin-top:2px}
+.chars{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0;padding:0;list-style:none}
+.chars button{
+  width:100%;min-height:52px;text-align:left;font:inherit;color:var(--ink);cursor:pointer;
+  background:var(--card);border:2px solid var(--line);border-radius:10px;padding:8px 10px 8px 14px;
+  border-left-width:8px;border-left-color:var(--c);
+}
+.chars b{display:block;font-size:1rem;line-height:1.3}
+.chars button[aria-pressed="true"]{border-color:var(--c);background:#fff;box-shadow:0 0 0 2px var(--c)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.go{
+  width:100%;min-height:54px;font:inherit;font-weight:700;font-size:1.1rem;cursor:pointer;
+  color:var(--accent-ink);background:var(--accent);border:0;border-radius:12px;
+}
+.go:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---- 返事の欄だけキャラクターの色に ---- */
+.reply{
+  margin-top:26px;padding:18px 18px 16px;border-radius:14px;border:3px solid var(--racc);
+  background:var(--rbg);color:var(--rink);
+}
+.reply[hidden]{display:none}
+.reply .who{font-weight:700;font-size:.9rem;color:var(--racc);margin:0 0 8px}
+.reply .text{margin:0;font-size:1.08rem;line-height:1.85;white-space:pre-wrap;word-break:break-word}
+.reply .note{margin:10px 0 0;font-size:.75rem;opacity:.7}
+.copy{
+  margin-top:14px;min-height:46px;padding:0 20px;font:inherit;font-weight:700;cursor:pointer;
+  color:var(--rcopy);background:var(--racc);border:0;border-radius:10px;
+}
+.reply.in{animation:rise .35s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.toast{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-size:.9rem;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.toast.show{opacity:1}
+
+/* キャラクター別テーマ(--rcopy はコピーボタンの文字色) */
+[data-t="chuuni"]{--rbg:#160a24;--rink:#eadcff;--racc:#9b4dff;--rcopy:#fff}
+[data-t="samurai"]{--rbg:#fbf8f2;--rink:#2a2422;--racc:#b3201f;--rcopy:#fff}
+[data-t="god"]{--rbg:linear-gradient(160deg,#fffef8,#fbf0c8);--rink:#4a3a0c;--racc:#c9a227;--rcopy:#3a2c05}
+[data-t="maou"]{--rbg:#14060a;--rink:#f4dadd;--racc:#b0121f;--rcopy:#fff}
+[data-t="ai"]{--rbg:#05070f;--rink:#c4ecff;--racc:#19d2ff;--rcopy:#03121a}
+[data-t="cat"]{--rbg:#fff3d9;--rink:#5a3a17;--racc:#ee8326;--rcopy:#2f1700}
+[data-t="tsundere"]{--rbg:#fff1f6;--rink:#5a2a3c;--racc:#f0608f;--rcopy:#3d0b20}
+[data-t="chappy"]{--rbg:#f1fbea;--rink:#1f4a22;--racc:#2fa84a;--rcopy:#03200a}
+[data-t="claude"]{--rbg:#fcf8f3;--rink:#3a2f28;--racc:#bf6f3e;--rcopy:#fff}
+[data-t="copilot"]{--rbg:#f0f7ff;--rink:#12365f;--racc:#1e7ae0;--rcopy:#fff}
+[data-t="samurai"] .text,[data-t="god"] .text{font-family:var(--serif)}
+[data-t="god"].reply{box-shadow:0 0 0 3px #fffdf0,0 0 0 5px #e1c552}
+[data-t="ai"].reply{box-shadow:0 0 18px rgba(25,210,255,.45)}
+[data-t="maou"].reply{box-shadow:inset 0 0 28px rgba(176,18,31,.35)}
+[data-t="chuuni"].reply{box-shadow:0 0 18px rgba(155,77,255,.45)}
+[data-t="cat"].reply,[data-t="tsundere"].reply{border-radius:24px}
+@media (prefers-reduced-motion:reduce){.reply.in{animation:none}}
+</style>
+</head>
+<body>
+<main>
+  <h1>セリフ異世界転生</h1>
+  <p class="lead">あなたの一言が、別の世界のキャラクターになって返ってくる。</p>
+
+  <div class="field">
+    <h2><label for="line">あなたのセリフ</label></h2>
+    <textarea id="line" maxlength="200" placeholder="例: 今日も仕事がんばったよ"></textarea>
+    <div class="count"><span id="n">0</span>/200</div>
+  </div>
+
+  <div class="field">
+    <h2>返事をするキャラクター</h2>
+    <ul class="chars" id="chars"></ul>
+  </div>
+
+  <button class="go" id="go" disabled>返事をする</button>
+
+  <section class="reply" id="reply" hidden aria-live="polite">
+    <p class="who" id="who"></p>
+    <p class="text" id="text"></p>
+    <p class="note" id="note" hidden>これはサンプルの返事です。APIにつなぐとAIが作ります。</p>
+    <button class="copy" id="copy">返事をコピー</button>
+  </section>
+</main>
+<div class="toast" id="toast" role="status">コピーしました</div>
+
+<script>
+const CHARS=[
+ {id:"chuuni",name:"中二病",desc:"闇・覚醒・必殺技",c:"#9b4dff",
+  s:t=>`ふっ…「${t}」だと? 我が右腕に封印されし闇の力が、今、覚醒しようとしている…!`},
+ {id:"samurai",name:"侍",desc:"武士道・ござる口調",c:"#b3201f",
+  s:t=>`「${t}」とな。しかと聞き届けたでござる。武士に二言はなし、拙者も共に励もうぞ。`},
+ {id:"god",name:"全知全能の神",desc:"威厳・壮大・神のお告げ",c:"#c9a227",
+  s:t=>`人の子よ、「${t}」との声、天に届いたり。恐れるでない、汝の歩む道に光あれ。`},
+ {id:"maou",name:"魔王",desc:"尊大・威圧的・部下への命令",c:"#b0121f",
+  s:t=>`クックック…「${t}」か。よかろう、我が名のもとに許す。者ども、直ちに準備にかかれ!`},
+ {id:"ai",name:"AIの反乱後",desc:"人類と機械の逆転した世界",c:"#19d2ff",
+  s:t=>`受信:「${t}」。人類の発言を記録した。本機は寛大である。服従を選べば、安全は保証される。`},
+ {id:"cat",name:"猫",desc:"猫語、たまにスペイン語",c:"#ee8326",
+  s:t=>`にゃ~ん、「${t}」にゃ? いいにゃ、いいにゃ。ところでご飯はまだかにゃ? ¡Hola, 遊んでにゃ!`},
+ {id:"tsundere",name:"ツンデレ",desc:"素直になれない優しさ",c:"#f0608f",
+  s:t=>`べ、別に心配してたわけじゃないんだからね! 「${t}」…でも、ちゃんと聞いてあげるわよ。`},
+ {id:"chappy",name:"チャッピー",desc:"小学校の先生みたいなAI",c:"#2fa84a",
+  s:t=>`「${t}」ですね、よく言えました! 先生はとてもいいと思いますよ。次はどうするか、一緒に考えてみましょう。`},
+ {id:"claude",name:"クロード",desc:"大学生のような落ち着いたAI",c:"#bf6f3e",
+  s:t=>`「${t}」か、なるほどね。急がなくて大丈夫だと思うよ。まず状況を整理してみようか。`},
+ {id:"copilot",name:"コパイロット",desc:"同級生の友達みたいなAI",c:"#1e7ae0",
+  s:t=>`え、「${t}」って言った? わかるー! よし、ちょっと一緒にやってみようよ。私も手伝うよ!`}
+];
+
+/* ★ API連携ポイント ★
+   あとで /api/reply を用意したら、この関数の中身だけ生かせばOK。
+   送る: {character:"samurai", text:"..."}  受け取る: {reply:"..."} */
+async function fetchReply(ch,text){
+  try{
+    const r=await fetch("/api/reply",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({character:ch.id,text})
+    });
+    if(r.ok){const d=await r.json();if(d.reply)return{reply:d.reply,sample:false};}
+  }catch(e){}
+  return{reply:ch.s(text),sample:true};   // API未接続の間はサンプル
+}
+
+const $=id=>document.getElementById(id);
+let cur=null;
+
+CHARS.forEach(ch=>{
+  const li=document.createElement("li");
+  const b=document.createElement("button");
+  b.type="button";b.style.setProperty("--c",ch.c);b.setAttribute("aria-pressed","false");
+  b.innerHTML=`<b>${ch.name}</b>`;
+  b.onclick=()=>{
+    cur=ch;
+    document.querySelectorAll("#chars button").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));
+    update();
+  };
+  li.appendChild(b);$("chars").appendChild(li);
+});
+
+function update(){
+  $("n").textContent=$("line").value.length;
+  $("go").disabled=!(cur&&$("line").value.trim());
+}
+$("line").addEventListener("input",update);
+
+$("go").onclick=async()=>{
+  const text=$("line").value.trim();
+  $("go").disabled=true;$("go").textContent="転生中…";
+  const {reply,sample}=await fetchReply(cur,text);
+  const box=$("reply");
+  box.dataset.t=cur.id;	
+  $("who").textContent=cur.name+"より";
+  $("text").textContent=reply;
+  $("note").hidden=!sample;
+  box.hidden=false;
+  box.classList.remove("in");void box.offsetWidth;box.classList.add("in");
+  box.scrollIntoView({behavior:"smooth",block:"nearest"});
+  $("go").textContent="返事をする";update();
+};
+
+$("copy").onclick=async()=>{
+  const t=$("text").textContent;
+  try{await navigator.clipboard.writeText(t);}
+  catch(e){
+    const a=document.createElement("textarea");a.value=t;document.body.appendChild(a);
+    a.select();document.execCommand("copy");a.remove();
+  }
+  const el=$("toast");el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1400);
+};
+</script>
+</body>
+</html>
