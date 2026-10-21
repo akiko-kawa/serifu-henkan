@@ -1,0 +1,13 @@
+{
+  "name": "serifu-henkan",
+  "version": "1.0.0",
+  "private": true,
+  "description": "セリフ異世界転生",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
