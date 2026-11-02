@@ -415,16 +415,54 @@ textarea::placeholder { color: #a3afbd; }
 [data-t="cat"].reply,
 [data-t="tsundere"].reply { border-radius: 24px; }
 
+
 @media (max-width: 600px) {
-  .page-shell { width: min(100% - 22px, 520px); padding-top: 16px; }
+  .page-shell {
+    width: calc(100% - 22px);
+    padding-top: 16px;
+  }
+
   .topbar { margin-bottom: 24px; }
   .hero { margin-bottom: 22px; }
-  .workbench { padding: 19px 15px; }
-  .character-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .character-button { min-height: 64px; }
-  .character-button .description { font-size: .62rem; }
-  .step-caption { font-size: .58rem; }
+
+  .workbench {
+    padding: 19px 15px;
+  }
+
+  .character-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+    justify-items: stretch;
+  }
+
+  .character-grid li {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .character-button {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 76px;
+    padding: 10px 5px;
+  }
+
+  .character-button b {
+    overflow-wrap: anywhere;
+  }
+
+  .character-button .description {
+    font-size: .62rem;
+  }
+
+  .step-caption {
+    font-size: .58rem;
+  }
 }
+
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
