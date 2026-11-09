@@ -537,16 +537,16 @@ textarea::placeholder { color: #a3afbd; }
 
 <script>
 const CHARS = [
-  {id:"chuuni",name:"中二病",desc:"闇・覚醒・必殺技",symbol:"✧",color:"#9b4dff"},
-  {id:"samurai",name:"侍",desc:"武士道・ござる口調",symbol:"刀",color:"#b3201f"},
-  {id:"god",name:"全知全能の神",desc:"威厳・神のお告げ",symbol:"☼",color:"#c9a227"},
-  {id:"maou",name:"魔王",desc:"尊大・威圧的",symbol:"♛",color:"#b0121f"},
-  {id:"ai",name:"AIの反乱後",desc:"人類と機械の逆転",symbol:"⌘",color:"#19a9d0"},
-  {id:"cat",name:"猫",desc:"猫語・たまにスペイン語",symbol:"ฅ",color:"#ee8326"},
- {id:"himmel",name:"ヒンメル（勇者）",desc:"自信・優しさ・勇者の名言",symbol:"⚔",color:"#3985c9"},
-  {id:"chappy",name:"チャッピー",desc:"優しく励ます先生",symbol:"✿",color:"#2fa84a"},
-  {id:"claude",name:"クロード",desc:"落ち着いた相談相手",symbol:"❖",color:"#bf6f3e"},
-  {id:"copilot",name:"コパイロット",desc:"明るい同級生",symbol:"➤",color:"#1e7ae0"}
+  {id:"chuuni",name:"中二病",symbol:"✧",color:"#9b4dff"},
+  {id:"samurai",name:"侍",symbol:"刀",color:"#b3201f"},
+  {id:"god",name:"全知全能の神",symbol:"☼",color:"#c9a227"},
+  {id:"maou",name:"魔王",symbol:"♛",color:"#b0121f"},
+  {id:"ai",name:"AIの反乱後",symbol:"⌘",color:"#19a9d0"},
+  {id:"cat",name:"猫",symbol:"ฅ",color:"#ee8326"},
+　 {id:"himmel",name:"ヒンメル（勇者）",symbol:"⚔",color:"#3985c9"},
+  {id:"chappy",name:"チャッピー",symbol:"✿",color:"#2fa84a"},
+  {id:"claude",name:"クロード",symbol:"❖",color:"#bf6f3e"},
+  {id:"copilot",name:"コパイロット",symbol:"➤",color:"#1e7ae0"}
 ];
 
 const $ = id => document.getElementById(id);
@@ -560,7 +560,7 @@ CHARS.forEach(ch => {
   button.className = "character-button";
   button.style.setProperty("--char-color", ch.color);
   button.setAttribute("aria-pressed", "false");
-  button.innerHTML = `<span class="symbol">${ch.symbol}</span><b>${ch.name}</b><span class="description">${ch.desc}</span>`;
+　button.innerHTML = `<span class="symbol">${ch.symbol}</span><b>${ch.name}</b>`;
 
   button.addEventListener("click", () => {
     currentCharacter = ch;
